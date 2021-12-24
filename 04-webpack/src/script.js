@@ -1,6 +1,17 @@
 import "./style.css";
 import * as THREE from "three";
 import gsap from "gsap";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+const cursor = {
+  x: 0,
+  y: 0,
+};
+
+window.addEventListener("mousemove", (event) => {
+  cursor.x = event.clientX / sizes.width - 0.5;
+  cursor.y = -(event.clientY / sizes.height - 0.5);
+});
 
 // Scene where we can put objects
 const scene = new THREE.Scene();
@@ -21,10 +32,15 @@ const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
 // Add camera to we can see the scene
+// Perspective camara
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
+// Orthographic camara
+// const aspectRatio = size.width / size.height;
+// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 50);
 
 // Camara position
 camera.position.z = 3;
+// camera.lookAt(mesh.position);
 
 scene.add(camera);
 
@@ -36,7 +52,7 @@ scene.add(camera);
 console.log(mesh.position.length());
 console.log(mesh.position.distanceTo(camera.position));
 // mesh.position.normalize();
-mesh.position.set(0.7, -0.6, 1);
+// mesh.position.set(0.7, -0.6, 1);
 
 // Axes Helper - Display helper grid
 const axesHelper = new THREE.AxesHelper();
@@ -53,16 +69,17 @@ scene.add(axesHelper);
 // mesh.rotation.y = 2;
 
 // Quaternion
-camera.lookAt(mesh.position);
+// camera.lookAt(mesh.position);
 
 // Renderer - To render screen through the camera point of view
 const canvas = document.querySelector(".webgl");
+const control = new OrbitControls(camera, canvas);
+control.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
   canvas,
 });
 
 renderer.setSize(sizes.width, sizes.height);
-gsap.to(mesh.position, { duration: 1, delay: 1, x: 2 });
 
 // clock
 const clock = new THREE.Clock();
@@ -71,11 +88,14 @@ const clock = new THREE.Clock();
 const tick = () => {
   // clock
   const elapsedTime = clock.getElapsedTime();
-  // Update objects
-  mesh.rotation.y = Math.sin(elapsedTime);
 
+  //   gsap.to(mesh.position, { duration: 1, x: cursor.x });
+  //   gsap.to(mesh.position, { duration: 1, y: cursor.y });
   // Render the scene with updated values
   renderer.render(scene, camera);
+
+  // update contorls
+  control.update();
 
   // callback fun
   window.webkitRequestAnimationFrame(tick);
