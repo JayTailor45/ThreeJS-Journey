@@ -1,5 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
+import gsap from "gsap";
 
 // Scene where we can put objects
 const scene = new THREE.Scene();
@@ -61,4 +62,22 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setSize(sizes.width, sizes.height);
-renderer.render(scene, camera);
+gsap.to(mesh.position, { duration: 1, delay: 1, x: 2 });
+
+// clock
+const clock = new THREE.Clock();
+
+// Animation
+const tick = () => {
+  // clock
+  const elapsedTime = clock.getElapsedTime();
+  // Update objects
+  mesh.rotation.y = Math.sin(elapsedTime);
+
+  // Render the scene with updated values
+  renderer.render(scene, camera);
+
+  // callback fun
+  window.webkitRequestAnimationFrame(tick);
+};
+tick();
