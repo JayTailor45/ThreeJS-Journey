@@ -53,9 +53,21 @@ window.addEventListener("dblclick", () => {
   }
 });
 // Actual geometry or shape
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+// const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4);
+const positionsArray = new Float32Array([
+    0, 0, 0,
+    0, 1, 0,
+    1, 0, 0
+]);
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
+
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', positionsAttribute);
 // Color of the material
-const material = new THREE.MeshBasicMaterial({ color: "red" });
+const material = new THREE.MeshBasicMaterial({
+  color: "red",
+  wireframe: true,
+});
 
 // Actual mesh object
 const mesh = new THREE.Mesh(geometry, material);
