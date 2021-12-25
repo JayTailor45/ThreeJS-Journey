@@ -17,10 +17,41 @@ window.addEventListener("mousemove", (event) => {
 const scene = new THREE.Scene();
 
 const sizes = {
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
 
+window.addEventListener("resize", () => {
+  // Update size
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  // Update camera
+  camera.espect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  // Update renderer
+  renderer.setSize(sizes.width, sizes.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+
+window.addEventListener("dblclick", () => {
+  const fullScreenElement =
+    document.fullscreenElement || document.webkitFullscreenElement;
+  if (!fullScreenElement) {
+    if (canvas.requestFullscreen) {
+      canvas.requestFullscreen();
+    } else if (canvas.webkitFullscreen) {
+      canvas.webkitRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+});
 // Actual geometry or shape
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 // Color of the material
@@ -80,6 +111,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // clock
 const clock = new THREE.Clock();
