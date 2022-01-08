@@ -1,12 +1,32 @@
 import "./style.css";
 import * as THREE from "three";
+import * as dat from "lil-gui";
 import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+/* DEBUG */
+const gui = new dat.GUI();
+
+const parameters = {
+  color: 0xff0000,
+  spin: () => {
+    gsap.to(mesh.rotation, {
+      y: mesh.rotation.y + Math.PI * 2,
+      duration: 1,
+    });
+  }
+};
 
 const cursor = {
   x: 0,
   y: 0,
 };
+
+gui.addColor(parameters, "color").onChange(() => {
+  material.color.set(parameters.color);
+});
+
+gui.add(parameters, "spin");
 
 window.addEventListener("mousemove", (event) => {
   cursor.x = event.clientX / sizes.width - 0.5;
@@ -53,26 +73,38 @@ window.addEventListener("dblclick", () => {
   }
 });
 // Actual geometry or shape
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4);
-const positionsArray = new Float32Array([
-    0, 0, 0,
-    0, 1, 0,
-    1, 0, 0
-]);
-const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
+const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+// const positionsArray = new Float32Array([
+//     0, 0, 0,
+//     0, 1, 0,
+//     1, 0, 0
+// ]);
+// const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
 
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute('position', positionsAttribute);
+// const geometry = new THREE.BufferGeometry();
+// geometry.setAttribute('position', positionsAttribute);
 // Color of the material
 const material = new THREE.MeshBasicMaterial({
   color: "red",
-  wireframe: true,
+  wireframe: false,
 });
 
 // Actual mesh object
 const mesh = new THREE.Mesh(geometry, material);
 // Add mesh to the scene
 scene.add(mesh);
+
+// debug
+gui.add(mesh.position, 'x', -3, 3, 0.01);
+gui.add(mesh.position, 'y', -3, 3, 0.01);
+gui.add(mesh.position, 'z', -3, 3, 0.01);
+
+gui.add(mesh, 'visible');
+
+gui.add(material, 'wireframe');
+
+gui.add(material, 'wireframe');
+
 
 // Add camera to we can see the scene
 // Perspective camara
@@ -92,8 +124,8 @@ scene.add(camera);
 // mesh.position.y = 3;
 // mesh.position.z = 3;
 
-console.log(mesh.position.length());
-console.log(mesh.position.distanceTo(camera.position));
+// console.log(mesh.position.length());
+// console.log(mesh.position.distanceTo(camera.position));
 // mesh.position.normalize();
 // mesh.position.set(0.7, -0.6, 1);
 
