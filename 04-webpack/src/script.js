@@ -4,6 +4,36 @@ import * as dat from "lil-gui";
 import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+/* Textures */
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onStart = () => {
+  console.log(`on start`);
+}
+loadingManager.onProgress = () => {
+  console.log(`in progress`);
+}
+loadingManager.onError = () => {
+  console.log(`on error`);
+}
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load('/textures/door/basecolor.jpg');
+// const alphaTexture = textureLoader.load('/textures/door/opacity.jpg');
+// const heightTexture = textureLoader.load('/textures/door/height.png');
+// const normalTexture = textureLoader.load('/textures/door/normal.jpg');
+// const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+// const metalnessTexture = textureLoader.load('/textures/door/metallic.jpg');
+// const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+
+// colorTexture.repeat.x = 2;
+// colorTexture.repeat.y = 3;
+// colorTexture.wrapS = THREE.RepeatWrapping;
+// colorTexture.wrapT = THREE.RepeatWrapping;
+// colorTexture.offset.x = 0.5;
+// colorTexture.rotation = 1;
+// colorTexture.generateMipmaps = false;
+// colorTexture.minFilter = THREE.NearestFilter;
+// colorTexture.magFilter = THREE.NearestFilter;
+
 /* DEBUG */
 const gui = new dat.GUI();
 
@@ -85,7 +115,7 @@ const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
 // geometry.setAttribute('position', positionsAttribute);
 // Color of the material
 const material = new THREE.MeshBasicMaterial({
-  color: "red",
+  map: colorTexture,
   wireframe: false,
 });
 
